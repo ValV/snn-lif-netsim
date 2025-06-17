@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Create a build directory
+mkdir -p build
+
+# Change to build directory
+cd build
+
+# Run CMake
+cmake ..
+
+# Build the executable
+make
+
+# Move the resulting binary to the parent folder (same dir as main.cpp)
+cp main ../main
+
+# Return to root directory
+cd ..
+
+echo "Build complete. Executable is at ./main"
+
+gnuplot -persist -e "
+set datafile separator ',';
+set title 'Spiking Activity';
+set xlabel 'Time (ms)';
+set ylabel 'Neuron ID';
+set style data points;
+plot 'spikes.csv' using 1:2 title 'Spikes' with points pt 7 ps 0.5 lc rgb 'blue'"
